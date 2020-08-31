@@ -4,7 +4,7 @@ namespace RSoft.Logs.Providers
 {
 
     /// <summary>
-    /// Http client factory interface
+    /// Http client factory
     /// </summary>
     public class HttpClientFactory : IHttpClientFactory
     {

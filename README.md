@@ -24,10 +24,10 @@ RSoft.Logs has the following dependencies.
 
 ### Installaction
 
-PackageManage: ```Install-Package RSoft.Logs -Version 1.0.0-preview200904.1```
-.NET Cli: ```dotnet add package RSoft.Logs --version 1.0.0-preview200904.1```
-Package Reference: ```<PackageReference Include="RSoft.Logs" Version="1.0.0-preview200904.1" />```
-Paket Cli: ```paket add RSoft.Logs --version 1.0.0-preview200904.1```
+- PackageManage: ```Install-Package RSoft.Logs -Version 1.0.0-preview200904.1```
+- .NET Cli: ```dotnet add package RSoft.Logs --version 1.0.0-preview200904.1```
+- Package Reference: ```<PackageReference Include="RSoft.Logs" Version="1.0.0-preview200904.1" />```
+- Paket Cli: ```paket add RSoft.Logs --version 1.0.0-preview200904.1```
 
 ### Configuration
 

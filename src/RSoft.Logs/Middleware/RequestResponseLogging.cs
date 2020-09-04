@@ -53,8 +53,10 @@ namespace RSoft.Logs.Middleware
         private string SecurityApplyBody(string httpVerb, string path, string body)
         {
 
-            IEnumerable<string> secList =
-                _options?
+            IEnumerable<string> secList = new List<string>();
+
+            if (_options?.SecurityActions != null)
+                secList = _options?
                     .SecurityActions.Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
                     .ToList();
 
@@ -130,7 +132,7 @@ namespace RSoft.Logs.Middleware
                     RemotePort = context.Connection.RemotePort
                 };
 
-                _logger.Log(LogLevel.Information, _eventId, requestInfo, null, (i, e) => { return $"{requestInfo.Id}(request): {requestInfo.Method} {requestInfo.RawUrl} => {body}"; });
+                _logger.Log(LogLevel.Information, _eventId, requestInfo, null, (i, e) => { return $"{requestInfo.Id}(request): {requestInfo.Method} {requestInfo.RawUrl} => {body ?? "{}"}"; });
             }
         }
 
@@ -154,7 +156,7 @@ namespace RSoft.Logs.Middleware
                     Exception = ex != null ? new LogExceptionInfo(ex) : null
                 };
 
-                _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, _eventId, respInfo, null, (i, e) => { return $"{respInfo.Id}(response): {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body}"; });
+                _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, _eventId, respInfo, ex, (i, e) => { return $"{respInfo.Id}(response): {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body ?? "{}"}"; });
 
             }
         }
@@ -194,7 +196,7 @@ namespace RSoft.Logs.Middleware
                 {
                     if (ctx.Response.ContentType == null)
                     {
-                        ctx.Response.Body = null;
+                        ctx.Response.Body = new MemoryStream();
                     }
                     else
                     {

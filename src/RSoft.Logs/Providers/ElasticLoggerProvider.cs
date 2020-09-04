@@ -144,16 +144,5 @@ namespace RSoft.Logs.Providers
 
         #endregion
 
-        #region IDisposable Support
-
-        ///<inheritdoc/>
-        protected override void Dispose(bool disposing)
-        {
-            _terminated = true;
-            base.Dispose(disposing);
-        }
-
-        #endregion
-
     }
 }

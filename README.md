@@ -11,7 +11,7 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 
 RSoft.Logs has the following dependencies.
 
-- Microsoft.AspNetCore.Hosting (>= 2.2.7)```
+- Microsoft.AspNetCore.Hosting (>= 2.2.7)
 - Microsoft.AspNetCore.Http (>= 2.2.2)
 - Microsoft.Extensions.Http (>= 3.1.7)
 - Microsoft.Extensions.Logging (>= 3.1.7)
@@ -24,10 +24,10 @@ RSoft.Logs has the following dependencies.
 
 ### Installaction
 
-PackageManage: ```Install-Package RSoft.Logs -Version inl1.0.0-preview200831.1```
-.NET Cli: ```dotnet add package RSoft.Logs --version 1.0.0-preview200831.1```
-Package Reference: ```<PackageReference Include="RSoft.Logs" Version="1.0.0-preview200831.1" />```
-Paket Cli: ```paket add RSoft.Logs --version 1.0.0-preview200831.1```
+PackageManage: ```Install-Package RSoft.Logs -Version 1.0.0-preview200904.1```
+.NET Cli: ```dotnet add package RSoft.Logs --version 1.0.0-preview200904.1```
+Package Reference: ```<PackageReference Include="RSoft.Logs" Version="1.0.0-preview200904.1" />```
+Paket Cli: ```paket add RSoft.Logs --version 1.0.0-preview200904.1```
 
 ### Configuration
 

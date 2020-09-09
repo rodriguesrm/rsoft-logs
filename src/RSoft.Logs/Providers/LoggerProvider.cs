@@ -19,7 +19,7 @@ namespace RSoft.Logs.Providers
         private readonly ConcurrentDictionary<string, Logger> _logger = new ConcurrentDictionary<string, Logger>();
         private readonly IHttpContextAccessor _accessor;
         private IExternalScopeProvider _scopeProvider;
-        protected bool _terminated;
+        private bool _terminated;
 
         protected readonly ConcurrentQueue<LogEntry> _entryQueue = new ConcurrentQueue<LogEntry>();
         protected IDisposable _settingsChangeToken;
@@ -155,6 +155,7 @@ namespace RSoft.Logs.Providers
         /// <param name="disposing">Indicate disposing object flag</param>
         protected virtual void Dispose(bool disposing)
         {
+            _terminated = true;
             if (_settingsChangeToken != null)
             {
                 _settingsChangeToken.Dispose();

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>d7ffe8f6-61bb-459a-bce5-6510bfe03494</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RSoft.Logs\RSoft.Logs.csproj" />
+  </ItemGroup>
+
+
+</Project>

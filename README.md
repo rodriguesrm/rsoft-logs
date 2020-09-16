@@ -106,6 +106,13 @@ namespace MyApplication.Web.Api
 
 In the ```Startup.cs``` file add the following codes: .
 
+Import the namespaces:
+
+```
+using RSoft.Logs.Extensions;
+using RSoft.Logs.Middleware;
+```
+
 In ```ConfigureServices``` method add the line:
 
 ```

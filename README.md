@@ -18,9 +18,9 @@ RSoft.Logs has the following dependencies.
 - Microsoft.Extensions.Logging.Abstractions (>= 3.1.7)
 - Microsoft.Extensions.Logging.Configuration (>= 3.1.7)
 - System.Configuration.ConfigurationManager (>= 4.7.0)
-- _System.Text.Json (>= 5.0.0-preview.8.20407.11)¹_
+- _System.Text.Json (>= 5.0.0-rc.1.20451.14)¹_
 - 
-**¹ WARNING:** RSoft.Logs uses version 5.0-preview of the System.Text.Json package. This version is not yet stable and therefore the RSoft.Logs package will maintain the same condition until the final version of this version is released.
+**¹ WARNING:** RSoft.Logs uses release candidate version of the System.Text.Json package. This version is not yet stable and therefore the RSoft.Logs package will maintain the same condition until the final version of this version is released.
 
 ### Installaction
 

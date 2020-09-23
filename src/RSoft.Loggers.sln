@@ -5,7 +5,14 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSoft.Logs", "RSoft.Logs\RSoft.Logs.csproj", "{3D82D321-55B0-4592-80C4-7D2B91B48AEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PockWeb.For.Test", "PockWeb.For.Test\PockWeb.For.Test.csproj", "{AB6AFC50-2F87-4E60-AB31-2F5D820D995D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PockWeb.For.Test", "PockWeb.For.Test\PockWeb.For.Test.csproj", "{AB6AFC50-2F87-4E60-AB31-2F5D820D995D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{251C89D0-F9DC-4063-9D5A-73B065007AAB}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\license.txt = ..\docs\license.txt
+		..\README.md = ..\README.md
+		..\docs\release-notes.md = ..\docs\release-notes.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -33,6 +33,12 @@ namespace RSoft.Logs.Middleware
 
         #region Constructors
 
+        /// <summary>
+        /// Create a new RequestResponseLogging instance
+        /// </summary>
+        /// <param name="next">Request delegate</param>
+        /// <param name="logger">Logger object</param>
+        /// <param name="options">Options configuration</param>
         public RequestResponseLogging(RequestDelegate next, ILogger<TCategory> logger, IOptions<RequestResponseMiddlewareOptions> options)
         {
             _next = next;
@@ -142,7 +148,7 @@ namespace RSoft.Logs.Middleware
         /// <param name="context">Http context object</param>
         /// <param name="body"></param>
         /// <param name="ex">Exception data object</param>
-        public void LogResponse(HttpContext context, string body, Exception ex)
+        private void LogResponse(HttpContext context, string body, Exception ex)
         {
             if (_options.LogResponse)
             {

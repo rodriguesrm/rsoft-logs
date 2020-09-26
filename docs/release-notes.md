@@ -16,7 +16,7 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 * Fix access modifier ``RequestResponseLogging.LogResponse`` method from ``public`` to ``private``.
 
 ####Version 1.0.0-rc1.2
-* Fix print date/date in console provider to use 24h format.
+* Fix print date/time in console provider to use 24h format.
 
 ##### Documentation
 

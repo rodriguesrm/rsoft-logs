@@ -18,6 +18,12 @@ namespace RSoft.Logs.Extensions
     public static class LoggerExtensions
     {
 
+        /// <summary>
+        /// Add middleware loggin options parameter
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static IServiceCollection AddMiddlewareLoggingOption(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<RequestResponseMiddlewareOptions>(options => configuration.GetSection("Logging:RequestResponseMiddleware").Bind(options));
@@ -57,6 +63,10 @@ namespace RSoft.Logs.Extensions
 
         }
 
+        /// <summary>
+        /// Add RSoft Elastic Logger
+        /// </summary>
+        /// <param name="builder">Logging builder object</param>
         public static ILoggingBuilder AddElasticLogger(this ILoggingBuilder builder)
         {
 
@@ -70,6 +80,11 @@ namespace RSoft.Logs.Extensions
 
         }
 
+        /// <summary>
+        /// Add RSoft Elastic Logger
+        /// </summary>
+        /// <param name="builder">Logging builder object</param>
+        /// <param name="configure">Action configure option</param>
         public static ILoggingBuilder AddElasticLogger(this ILoggingBuilder builder, Action<LoggerOptions> configure)
         {
             if (configure == null)

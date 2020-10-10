@@ -50,6 +50,7 @@ namespace RSoft.Logs.Providers
 
         #region Local methods
 
+        ///<inheritdoc/>
         protected override void WriteLogAction(LogEntry info)
         {
             bool printDate = true;

@@ -51,6 +51,18 @@ namespace PockWeb.For.Test.Controllers
             throw new System.Exception("ERROR TEST");
         }
 
+        [HttpPost("ignore")]
+        public IActionResult PostIgnore([FromBody] PostModel model)
+        {
+            return Ok(new ResponseModel(true, $"POST IGNORE OK - {model?.ToString()}"));
+        }
+
+        [HttpGet("ignore")]
+        public IActionResult GetIgnore()
+        {
+            return Ok(new ResponseModel(true, "GET IGNORE OK"));
+        }
+
     }
 
 }

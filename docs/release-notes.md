@@ -18,8 +18,12 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.0.0-rc1.3
 * Fix print date/time in console provider to use 24h format.
 
-#### Version 1.0.0-rc1.3
+#### Version 1.0.0-rc1.4
 * Fix methods xml documentation.
+
+#### Version 1.0.0-rc1.5
+* Added IgnoreActions for not log in request-response middleware logger.
+* Upgrade nuget packages
 
 ##### Documentation
 

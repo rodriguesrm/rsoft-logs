@@ -4,7 +4,7 @@
     /// <summary>
     /// Sensitive information actions list (verbs and routes path) options model
     /// </summary>
-    public class RequestResponseSecurityActionOptions
+    public class RequestResponseActionOptions
     {
 
         /// <summary>

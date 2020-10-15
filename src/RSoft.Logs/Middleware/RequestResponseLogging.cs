@@ -63,7 +63,8 @@ namespace RSoft.Logs.Middleware
 
             if (_options?.SecurityActions != null)
                 secList = _options?
-                    .SecurityActions.Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
+                    .SecurityActions
+                    .Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
                     .ToList();
 
             string action = $"{httpVerb.ToUpper()}:{path.ToLower()}";
@@ -71,6 +72,28 @@ namespace RSoft.Logs.Middleware
                 body = "*** OMITTED FOR SECURITY ***";
 
             return body;
+        }
+
+        /// <summary>
+        /// Checks whether the action is in the list of actions to be ignored
+        /// </summary>
+        /// <param name="httpVerb">Http verb action (method)</param>
+        /// <param name="path">Route path</param>
+        private bool IsIgnoreAction(string httpVerb, string path)
+        {
+            IEnumerable<string> ignoredList = new List<string>();
+
+            if (_options?.IgnoreActions != null)
+                ignoredList = _options?
+                    .IgnoreActions
+                    .Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
+                    .ToList();
+
+            string action = $"{httpVerb.ToUpper()}:{path.ToLower()}";
+            if (ignoredList.Contains(action))
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -180,6 +203,8 @@ namespace RSoft.Logs.Middleware
         public async Task Invoke(HttpContext ctx)
         {
 
+            bool logAction = !IsIgnoreAction(ctx.Request.Method, ctx.Request.Path);
+
             Stream streamBody = ctx.Response.Body;
             ctx.Request.EnableBuffering();
 
@@ -188,7 +213,8 @@ namespace RSoft.Logs.Middleware
             ctx.Request.Body.Position = 0;
 
             // Log request
-            LogRequest(ctx, body);
+            if (logAction)
+                LogRequest(ctx, body);
 
             try
             {
@@ -197,36 +223,41 @@ namespace RSoft.Logs.Middleware
 
                 await _next.Invoke(ctx);
 
-                string responseText = null;
-                if (ctx.Response.StatusCode != StatusCodes.Status204NoContent)
+                if (logAction)
                 {
-                    if (ctx.Response.ContentType == null)
-                    {
-                        ctx.Response.Body = new MemoryStream();
-                    }
-                    else
-                    {
 
-                        if (ctx.Response.ContentType.StartsWith("application/json"))
+                    string responseText = null;
+                    if (ctx.Response.StatusCode != StatusCodes.Status204NoContent)
+                    {
+                        if (ctx.Response.ContentType == null)
                         {
-                            responseText = await GetBodyResponse(ctx.Response);
-                            if (!string.IsNullOrWhiteSpace(responseText))
-                            {
-                                byte[] buffer = Encoding.UTF8.GetBytes(responseText);
-                                await streamBody.WriteAsync(buffer, 0, buffer.Length);
-                            }
+                            ctx.Response.Body = new MemoryStream();
                         }
                         else
                         {
-                            ctx.Response.Body.Position = 0;
-                            await ctx.Response.Body.CopyToAsync(streamBody);
-                            responseText = "*** BINARY CONTENT ***";
+
+                            if (ctx.Response.ContentType.StartsWith("application/json"))
+                            {
+                                responseText = await GetBodyResponse(ctx.Response);
+                                if (!string.IsNullOrWhiteSpace(responseText))
+                                {
+                                    byte[] buffer = Encoding.UTF8.GetBytes(responseText);
+                                    await streamBody.WriteAsync(buffer, 0, buffer.Length);
+                                }
+                            }
+                            else
+                            {
+                                ctx.Response.Body.Position = 0;
+                                await ctx.Response.Body.CopyToAsync(streamBody);
+                                responseText = "*** BINARY CONTENT ***";
+                            }
                         }
+
                     }
 
-                }
+                    LogResponse(ctx, responseText, null);
 
-                LogResponse(ctx, responseText, null);
+                }
 
             }
             catch (Exception ex)

@@ -223,41 +223,37 @@ namespace RSoft.Logs.Middleware
 
                 await _next.Invoke(ctx);
 
-                if (logAction)
+                string responseText = null;
+                if (ctx.Response.StatusCode != StatusCodes.Status204NoContent)
                 {
-
-                    string responseText = null;
-                    if (ctx.Response.StatusCode != StatusCodes.Status204NoContent)
+                    if (ctx.Response.ContentType == null)
                     {
-                        if (ctx.Response.ContentType == null)
+                        ctx.Response.Body = new MemoryStream();
+                    }
+                    else
+                    {
+
+                        if (ctx.Response.ContentType.StartsWith("application/json"))
                         {
-                            ctx.Response.Body = new MemoryStream();
+                            responseText = await GetBodyResponse(ctx.Response);
+                            if (!string.IsNullOrWhiteSpace(responseText))
+                            {
+                                byte[] buffer = Encoding.UTF8.GetBytes(responseText);
+                                await streamBody.WriteAsync(buffer, 0, buffer.Length);
+                            }
                         }
                         else
                         {
-
-                            if (ctx.Response.ContentType.StartsWith("application/json"))
-                            {
-                                responseText = await GetBodyResponse(ctx.Response);
-                                if (!string.IsNullOrWhiteSpace(responseText))
-                                {
-                                    byte[] buffer = Encoding.UTF8.GetBytes(responseText);
-                                    await streamBody.WriteAsync(buffer, 0, buffer.Length);
-                                }
-                            }
-                            else
-                            {
-                                ctx.Response.Body.Position = 0;
-                                await ctx.Response.Body.CopyToAsync(streamBody);
-                                responseText = "*** BINARY CONTENT ***";
-                            }
+                            ctx.Response.Body.Position = 0;
+                            await ctx.Response.Body.CopyToAsync(streamBody);
+                            responseText = "*** BINARY CONTENT ***";
                         }
-
                     }
 
-                    LogResponse(ctx, responseText, null);
-
                 }
+
+                if (logAction)
+                    LogResponse(ctx, responseText, null);
 
             }
             catch (Exception ex)

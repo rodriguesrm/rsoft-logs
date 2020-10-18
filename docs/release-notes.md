@@ -24,6 +24,13 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.0.0-rc1.5
 * Added IgnoreActions for not log in request-response middleware logger.
 * Upgrade nuget packages
+* (CRITICAL BUG) => Responses is compromissed when match IgnoreActions
+
+#### Version 1.0.0-rc1.6
+* Fix critical bug responses is null wheb match IgnoreActions
+
+#### Version 1.0.0-rc1.7
+* Create flag to enable or disable Elastic Logging
 
 ##### Documentation
 

@@ -52,34 +52,40 @@ namespace RSoft.Logs.Providers
         /// <param name="factory">Http client factory object</param>
         public ElasticLoggerProvider(LoggerOptions settings, IHttpContextAccessor accessor, IHttpClientFactory factory) : base(accessor)
         {
+
             Settings = settings;
 
-            configIsOk = true;
-            //_client = new HttpClient();
-            _client = factory.CreateClient();
-
-            if (string.IsNullOrWhiteSpace(settings.Elastic.Uri))
-            {
-                configIsOk = false;
-                Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'Uri' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
-            }
-            if (string.IsNullOrWhiteSpace(settings.Elastic.DefaultIndexName))
-            {
-                configIsOk = false;
-                Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'DefaultIndexName' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
-            }
+            configIsOk = settings.Elastic.Enable;
 
             if (configIsOk)
             {
-                _client.BaseAddress = new Uri(Settings.Elastic.Uri);
-                _indexName = Settings.Elastic.DefaultIndexName;
-                _serializerOptions = new JsonSerializerOptions()
+
+                _client = factory.CreateClient();
+
+                if (string.IsNullOrWhiteSpace(settings.Elastic.Uri))
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = false,
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                    ReferenceHandler = ReferenceHandler.Preserve
-                };
+                    configIsOk = false;
+                    Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'Uri' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
+                }
+                if (string.IsNullOrWhiteSpace(settings.Elastic.DefaultIndexName))
+                {
+                    configIsOk = false;
+                    Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'DefaultIndexName' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
+                }
+
+                if (configIsOk)
+                {
+                    _client.BaseAddress = new Uri(Settings.Elastic.Uri);
+                    _indexName = Settings.Elastic.DefaultIndexName;
+                    _serializerOptions = new JsonSerializerOptions()
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        WriteIndented = false,
+                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                        ReferenceHandler = ReferenceHandler.Preserve
+                    };
+                }
+
             }
 
         }

@@ -13,14 +13,12 @@ RSoft.Logs has the following dependencies.
 
 - Microsoft.AspNetCore.Hosting (>= 2.2.7)
 - Microsoft.AspNetCore.Http (>= 2.2.2)
-- Microsoft.Extensions.Http (>= 3.1.9)
-- Microsoft.Extensions.Logging (>= 3.1.9)
-- Microsoft.Extensions.Logging.Abstractions (>= 3.1.9)
-- Microsoft.Extensions.Logging.Configuration (>= 3.1.9)
-- System.Configuration.ConfigurationManager (>= 4.7.0)
-- _System.Text.Json (>= 5.0.0-rc.2.20475.5)¹_
-
-**¹ WARNING:** RSoft.Logs uses release candidate version of the System.Text.Json package. This version is not yet stable and therefore the RSoft.Logs package will maintain the same condition until the final version of this version is released.
+- Microsoft.Extensions.Http (>= 5.0.0)
+- Microsoft.Extensions.Logging (>= 5.0.0)
+- Microsoft.Extensions.Logging.Abstractions (>= 5.0.0)
+- Microsoft.Extensions.Logging.Configuration (>= 5.0.0)
+- System.Configuration.ConfigurationManager (>= 5.0.0)
+- _System.Text.Json (>= 5.0.0)
 
 ### Installaction
 

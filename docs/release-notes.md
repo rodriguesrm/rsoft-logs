@@ -32,6 +32,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.0.0-rc1.7
 * Create flag to enable or disable Elastic Logging
 
+#### Version 1.0.0
+* Upgrade packages dependencies to released versions 5.0.0
+
 ##### Documentation
 
-Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/release/1.0.0-rc/README.md)
+Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

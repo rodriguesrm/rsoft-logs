@@ -27,6 +27,9 @@ namespace RSoft.Logs
 
         #region Constrants
 
+        /// <summary>
+        /// Margin space constant
+        /// </summary>
         public const string Margin = "     ";
 
         #endregion
@@ -140,7 +143,6 @@ namespace RSoft.Logs
         /// <param name="level">Entry will be written on this level.</param>
         /// <param name="eventId">Identifies a logging event</param>
         /// <param name="message">Entry message</param>
-        /// <param name="printDate">Indicate print date/time flag</param>
         /// <param name="logException">The exception related to this entry.</param>
         internal static void Print(string category, LogLevel level, EventId eventId, string message, LogExceptionInfo logException)
             => Print(category, level, eventId, message, true, logException);
@@ -245,7 +247,7 @@ namespace RSoft.Logs
                 Console.ForegroundColor = messageForegroundColor;
                 Console.BackgroundColor = messageBackgroundColor;
             }
-            string date = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss.fff} | ";
+            string date = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} | ";
             if (!printDate)
                 date = string.Empty;
             Console.WriteLine($"{date}{category}[{eventId.Id}]");

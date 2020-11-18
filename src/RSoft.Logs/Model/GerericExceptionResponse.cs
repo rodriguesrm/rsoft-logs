@@ -12,12 +12,12 @@
         /// </summary>
         /// <param name="code">Exception code</param>
         /// <param name="message">Exception message</param>
-        /// <param name="tradeId">Operation trade id</param>
-        public GerericExceptionResponse(string code, string message, string tradeId)
+        /// <param name="traceId">Operation trace id</param>
+        public GerericExceptionResponse(string code, string message, string traceId)
         {
             Code = code;
             Message = message;
-            TradeId = tradeId;
+            TraceId = traceId;
         }
 
         /// <summary>
@@ -31,9 +31,9 @@
         public string Message { get; set; }
 
         /// <summary>
-        /// Operation trade id
+        /// Operation trace id
         /// </summary>
-        public string TradeId { get; set; }
+        public string TraceId { get; set; }
 
     }
 

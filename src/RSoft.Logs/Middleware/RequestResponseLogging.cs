@@ -33,6 +33,12 @@ namespace RSoft.Logs.Middleware
 
         #region Constructors
 
+        /// <summary>
+        /// Create a new RequestResponseLogging instance
+        /// </summary>
+        /// <param name="next">Request delegate</param>
+        /// <param name="logger">Logger object</param>
+        /// <param name="options">Options configuration</param>
         public RequestResponseLogging(RequestDelegate next, ILogger<TCategory> logger, IOptions<RequestResponseMiddlewareOptions> options)
         {
             _next = next;
@@ -57,7 +63,8 @@ namespace RSoft.Logs.Middleware
 
             if (_options?.SecurityActions != null)
                 secList = _options?
-                    .SecurityActions.Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
+                    .SecurityActions
+                    .Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
                     .ToList();
 
             string action = $"{httpVerb.ToUpper()}:{path.ToLower()}";
@@ -65,6 +72,28 @@ namespace RSoft.Logs.Middleware
                 body = "*** OMITTED FOR SECURITY ***";
 
             return body;
+        }
+
+        /// <summary>
+        /// Checks whether the action is in the list of actions to be ignored
+        /// </summary>
+        /// <param name="httpVerb">Http verb action (method)</param>
+        /// <param name="path">Route path</param>
+        private bool IsIgnoreAction(string httpVerb, string path)
+        {
+            IEnumerable<string> ignoredList = new List<string>();
+
+            if (_options?.IgnoreActions != null)
+                ignoredList = _options?
+                    .IgnoreActions
+                    .Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
+                    .ToList();
+
+            string action = $"{httpVerb.ToUpper()}:{path.ToLower()}";
+            if (ignoredList.Contains(action))
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -142,7 +171,7 @@ namespace RSoft.Logs.Middleware
         /// <param name="context">Http context object</param>
         /// <param name="body"></param>
         /// <param name="ex">Exception data object</param>
-        public void LogResponse(HttpContext context, string body, Exception ex)
+        private void LogResponse(HttpContext context, string body, Exception ex)
         {
             if (_options.LogResponse)
             {
@@ -174,6 +203,8 @@ namespace RSoft.Logs.Middleware
         public async Task Invoke(HttpContext ctx)
         {
 
+            bool logAction = !IsIgnoreAction(ctx.Request.Method, ctx.Request.Path);
+
             Stream streamBody = ctx.Response.Body;
             ctx.Request.EnableBuffering();
 
@@ -182,7 +213,8 @@ namespace RSoft.Logs.Middleware
             ctx.Request.Body.Position = 0;
 
             // Log request
-            LogRequest(ctx, body);
+            if (logAction)
+                LogRequest(ctx, body);
 
             try
             {
@@ -220,7 +252,8 @@ namespace RSoft.Logs.Middleware
 
                 }
 
-                LogResponse(ctx, responseText, null);
+                if (logAction)
+                    LogResponse(ctx, responseText, null);
 
             }
             catch (Exception ex)

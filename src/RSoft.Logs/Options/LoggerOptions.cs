@@ -19,6 +19,9 @@ namespace RSoft.Logs.Options
         /// </summary>
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
+        /// <summary>
+        /// Elastic options parameters
+        /// </summary>
         public ElasticOptions Elastic { get; set; }
 
     }

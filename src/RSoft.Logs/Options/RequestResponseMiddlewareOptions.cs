@@ -22,7 +22,12 @@ namespace RSoft.Logs.Options
         /// <summary>
         /// Sensitive information actions list (verbs and routes path)
         /// </summary>
-        public IEnumerable<RequestResponseSecurityActionOptions> SecurityActions { get; set; }
+        public IEnumerable<RequestResponseActionOptions> SecurityActions { get; set; }
+
+        /// <summary>
+        /// Ignore action list (verbs and routes path)
+        /// </summary>
+        public IEnumerable<RequestResponseActionOptions> IgnoreActions { get; set; }
 
     }
 

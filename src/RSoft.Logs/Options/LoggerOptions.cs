@@ -24,6 +24,11 @@ namespace RSoft.Logs.Options
         /// </summary>
         public ElasticOptions Elastic { get; set; }
 
+        /// <summary>
+        /// Seq options parameters
+        /// </summary>
+        public SeqOptions Seq { get; set; }
+
     }
 
 }

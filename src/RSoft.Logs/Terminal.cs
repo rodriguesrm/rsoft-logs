@@ -62,7 +62,7 @@ namespace RSoft.Logs
         /// <param name="level">Entry will be written on this level.</param>
         /// <param name="message">Entry message</param>
         public static void Print(string category, LogLevel level, string message)
-            => Print(category, level, default, message, true, logException: null);
+            => Print(category, level, default, message, true, exception: null);
 
         /// <summary>
         /// Print message in console terminal
@@ -72,7 +72,7 @@ namespace RSoft.Logs
         /// <param name="eventId">Identifies a logging event</param>
         /// <param name="message">Entry message</param>
         public static void Print(string category, LogLevel level, EventId eventId, string message)
-            => Print(category, level, eventId, message, true, logException: null);
+            => Print(category, level, eventId, message, true, exception: null);
 
         /// <summary>
         /// Print message in console terminal
@@ -82,7 +82,7 @@ namespace RSoft.Logs
         /// <param name="message">Entry message</param>
         /// <param name="printDate">Indicate print date/time flag</param>
         public static void Print(string category, LogLevel level, string message, bool printDate)
-            => Print(category, level, default, message, printDate, logException: null);
+            => Print(category, level, default, message, printDate, exception: null);
 
         /// <summary>
         /// Print message in console terminal
@@ -93,7 +93,7 @@ namespace RSoft.Logs
         /// <param name="message">Entry message</param>
         /// <param name="printDate">Indicate print date/time flag</param>
         public static void Print(string category, LogLevel level, EventId eventId, string message, bool printDate)
-            => Print(category, level, eventId, message, printDate, logException: null);
+            => Print(category, level, eventId, message, printDate, exception: null);
 
         /// <summary>
         /// Print message in console terminal
@@ -103,38 +103,7 @@ namespace RSoft.Logs
         /// <param name="message">Entry message</param>
         /// <param name="exception">The exception related to this entry.</param>
         public static void Print(string category, LogLevel level, string message, Exception exception)
-            => Print(category, level, default, message, true, new LogExceptionInfo(exception));
-
-        /// <summary>
-        /// Print message in console terminal
-        /// </summary>
-        /// <param name="category">Category logger</param>
-        /// <param name="level">Entry will be written on this level.</param>
-        /// <param name="eventId">Identifies a logging event</param>
-        /// <param name="message">Entry message</param>
-        /// <param name="exception">The exception related to this entry.</param>
-        public static void Print(string category, LogLevel level, EventId eventId, string message, Exception exception)
-            => Print(category, level, eventId, message, true, new LogExceptionInfo(exception));
-
-        /// <summary>
-        /// Print message in console terminal
-        /// </summary>
-        /// <param name="category">Category logger</param>
-        /// <param name="level">Entry will be written on this level.</param>
-        /// <param name="message">Entry message</param>
-        /// <param name="logException">The exception related to this entry.</param>
-        internal static void Print(string category, LogLevel level, string message, LogExceptionInfo logException)
-            => Print(category, level, default, message, true, logException);
-
-        /// <summary>
-        /// Print message in console terminal
-        /// </summary>
-        /// <param name="category">Category logger</param>
-        /// <param name="level">Entry will be written on this level.</param>
-        /// <param name="message">Entry message</param>
-        /// <param name="logException">The exception related to this entry.</param>
-        internal static void Print(string category, LogLevel level, string message, bool printDate, LogExceptionInfo logException)
-            => Print(category, level, default, message, printDate, logException);
+            => Print(category, level, default, message, true, exception);
 
         /// <summary>
         /// Print message in console terminal
@@ -144,7 +113,7 @@ namespace RSoft.Logs
         /// <param name="eventId">Identifies a logging event</param>
         /// <param name="message">Entry message</param>
         /// <param name="logException">The exception related to this entry.</param>
-        internal static void Print(string category, LogLevel level, EventId eventId, string message, LogExceptionInfo logException)
+        internal static void Print(string category, LogLevel level, EventId eventId, string message, Exception logException)
             => Print(category, level, eventId, message, true, logException);
 
         /// <summary>
@@ -156,7 +125,7 @@ namespace RSoft.Logs
         /// <param name="printDate">Indicate print date/time flag</param>
         /// <param name="exception">The exception related to this entry.</param>
         public static void Print(string category, LogLevel level, string message, bool printDate, Exception exception)
-            => Print(category, level, default, message, printDate, new LogExceptionInfo(exception));
+            => Print(category, level, default, message, printDate, exception);
 
         /// <summary>
         /// Print message in console terminal
@@ -167,19 +136,7 @@ namespace RSoft.Logs
         /// <param name="message">Entry message</param>
         /// <param name="printDate">Indicate print date/time flag</param>
         /// <param name="exception">The exception related to this entry.</param>
-        public static void Print(string category, LogLevel level, EventId eventId, string message, bool printDate, Exception exception)
-            => Print(category, level, eventId, message, printDate, new LogExceptionInfo(exception));
-
-        /// <summary>
-        /// Print message in console terminal
-        /// </summary>
-        /// <param name="category">Category logger</param>
-        /// <param name="level">Entry will be written on this level.</param>
-        /// <param name="eventId">Identifies a logging event</param>
-        /// <param name="message">Entry message</param>
-        /// <param name="printDate">Indicate print date/time flag</param>
-        /// <param name="logException">The exception related to this entry.</param>
-        internal static void Print(string category, LogLevel level, EventId eventId, string message, bool printDate, LogExceptionInfo logException)
+        internal static void Print(string category, LogLevel level, EventId eventId, string message, bool printDate, Exception exception)
         {
 
             if (level == LogLevel.None)
@@ -259,13 +216,13 @@ namespace RSoft.Logs
             Console.ResetColor();
 
             // Exception
-            if (logException != null)
+            if (exception != null)
             {
-                WriteMessageWithTab($"ErrorMessage: {logException.Message}", errorForegroundColor, errorBackgroundColor);
-                WriteMessageWithTab($"Type: {logException.Type}", errorForegroundColor, errorBackgroundColor);
-                WriteMessageWithTab($"Source: {logException.Source}", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($"ErrorMessage: {exception.Message}", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($"Type: {exception.GetType().FullName}", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($"Source: {exception.Source}", errorForegroundColor, errorBackgroundColor);
                 WriteMessageWithTab($"StackTrace:", errorForegroundColor, errorBackgroundColor);
-                WriteMessageWithTab($" {logException.StackTrace?.Trim()}", errorForegroundColor, errorBackgroundColor);
+                WriteMessageWithTab($" {exception.StackTrace?.Trim()}", errorForegroundColor, errorBackgroundColor);
             }
 
             Console.ResetColor();

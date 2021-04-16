@@ -59,7 +59,8 @@ namespace RSoft.Logs.Model
         /// <summary>
         /// Exception data
         /// </summary>
-        public LogExceptionInfo Exception { get; set; }
+        //public LogExceptionInfo Exception { get; set; }
+        public Exception Exception { get; set; }
 
         #endregion
 

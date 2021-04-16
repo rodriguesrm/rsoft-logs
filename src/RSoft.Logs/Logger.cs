@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using RSoft.Logs.Extensions;
 using RSoft.Logs.Model;
 using RSoft.Logs.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Reflection;
+using System.Text.Json;
 
 namespace RSoft.Logs
 {
@@ -92,15 +94,15 @@ namespace RSoft.Logs
                     Category = _category,
                     Level = logLevel,
                     Text = exception?.Message ?? state.ToString(),
-                    Exception = exception != null ? new LogExceptionInfo(exception) : null,
+                    //Exception = exception != null ? new LogExceptionInfo(exception) : null,
+                    Exception = exception,
                     EventId = eventId,
-                    State = state,
                     ApplicationUser = GetSignedUserInformation()
                 };
 
                 if (state is string)
                 {
-                    info.StateText = state.ToString();
+                    info.Scopes.Add("Text", state.ToString());
                 }
                 else if (state is AuditRequestInfo auditRequest)
                 {
@@ -108,67 +110,67 @@ namespace RSoft.Logs
                     info.Text = formatter(state, exception);
                     if (auditRequest.Body != null && info.Text.Contains(auditRequest.Body))
                         auditRequest.Body = null;
-                    LogScopeInfo scope = new LogScopeInfo
-                    {
-                        Text = $"{auditRequest.Id} | {auditRequest.Method} {auditRequest.RawUrl}"
-                    };
 
-                    IDictionary<string, object> dicScope = new Dictionary<string, object>
+                    info.Scopes.Add("Date", auditRequest.Date.ToString("u"));
+                    info.Scopes.Add("Scheme", auditRequest.Scheme);
+                    
+                    if (auditRequest.Headers?.Count > 0)
                     {
-                        { "Id", auditRequest.Id },
-                        { "Date", auditRequest.Date },
-                        { "Scheme", auditRequest.Scheme },
-                        { "Headers", auditRequest.Headers },
-                        { "Path", auditRequest.Path },
-                        { "Method", auditRequest.Method },
-                        { "Host", auditRequest.Host },
-                        { "QueryString", auditRequest.QueryString },
-                        { "ClientCertificate", auditRequest.ClientCertificate },
-                        { "LocalIpAddress", auditRequest.LocalIpAddress },
-                        { "LocalPort", auditRequest.LocalPort },
-                        { "RemoteIpAddress", auditRequest.RemoteIpAddress },
-                        { "RemotePort", auditRequest.RemotePort },
-                        { "RawUrl", auditRequest.RawUrl },
-                        { "RequestNumber", auditRequest.RequestNumber },
-                        { "SessionId", auditRequest.SessionId }
-                    };
+                        foreach (var header in auditRequest.Headers)
+                        {
+                            info.Scopes.Add($"Headers.{header.Key}", header.Value);
+                        }
+                    }
 
-                    info.Scopes.Add(scope);
+                    info.Scopes.Add("Method", auditRequest.Method);
+                    info.Scopes.Add("Host", auditRequest.Host);
+                    if (!string.IsNullOrWhiteSpace(auditRequest.QueryString))
+                        info.Scopes.Add("QueryString", auditRequest.QueryString);
+                    info.Scopes.Add("ClientCertificate", auditRequest.ClientCertificate);
+                    info.Scopes.Add("LocalIpAddress", auditRequest.LocalIpAddress);
+                    info.Scopes.Add("LocalPort", auditRequest.LocalPort.ToString());
+                    info.Scopes.Add("RemoteIpAddress", auditRequest.RemoteIpAddress);
+                    info.Scopes.Add("RemotePort", auditRequest.RemotePort.ToString());
+                    info.Scopes.Add("RawUrl", auditRequest.RawUrl);
+                    
+                    if (!string.IsNullOrWhiteSpace(auditRequest.Body))
+                        info.Scopes.Add("Body", auditRequest.Body.AsJson());
 
                 }
                 else if (state is AuditResponseInfo auditResponse)
                 {
-                    
+
                     info.Text = formatter(state, exception);
                     if (auditResponse.Body != null && info.Text.Contains(auditResponse.Body))
                         auditResponse.Body = null;
-                    LogScopeInfo scope = new LogScopeInfo
+
+                    info.Scopes.Add("StatusCode", auditResponse.StatusCode.ToString());
+                    info.Scopes.Add("Date", auditResponse.Date.ToString("u"));
+
+                    if (auditResponse.Headers?.Count > 0)
                     {
-                        Text = $"{auditResponse.Id} | {auditResponse.StatusCode}-{(HttpStatusCode)auditResponse.StatusCode}"
-                    };
+                        foreach (var header in auditResponse.Headers)
+                        {
+                            info.Scopes.Add($"Headers.{header.Key}", header.Value);
+                        }
+                    }
 
-                    IDictionary<string, object> dicScope = new Dictionary<string, object>
-                    {
-                        { "Id", auditResponse.Id },
-                        { "Date", auditResponse.Date },
-                        { "Headers", auditResponse.Headers },
-                        { "StatusCode", auditResponse.StatusCode },
-                        { "Exception", auditResponse.Exception },
-                        { "RequestNumber", auditResponse.RequestNumber },
-                        { "SessionId", auditResponse.SessionId }
-                    };
+                    if (!string.IsNullOrWhiteSpace(auditResponse.Body))
+                        info.Scopes.Add("Body", auditResponse.Body.AsJson());
 
-                    info.Scopes.Add(scope);
-
-                }
+            }
                 else if (state is IEnumerable<KeyValuePair<string, object>> properties)
                 {
 
-                    info.StateProperties = new Dictionary<string, object>();
                     foreach (KeyValuePair<string, object> item in properties)
                     {
                         if (item.Key != "{OriginalFormat}")
-                            info.StateProperties[item.Key] = item.Value;
+                        {
+                            if (item.Value is string)
+                                info.Scopes[item.Key] = item.Value.ToString();
+                            else
+                                info.Scopes[item.Key] = item.Value.AsJson();
+                        }
                     }
                 }
 
@@ -178,23 +180,30 @@ namespace RSoft.Logs
                     _provider.ScopeProvider.ForEachScope((value, loggingProps) =>
                     {
 
-                        LogScopeInfo scope = new LogScopeInfo();
-
                         if (value is string)
                         {
-                            scope.Text = value.ToString();
+                            info.Scopes["Text"] = value.ToString();
+
                         }
                         else if (value is IEnumerable<KeyValuePair<string, object>> props)
                         {
-                            if (scope.Properties == null)
-                                scope.Properties = new Dictionary<string, object>();
                             foreach (KeyValuePair<string, object> pair in props)
                             {
-                                scope.Properties[pair.Key] = pair.Value;
+                                string pairValue = null;
+                                if (pair.Value is string)
+                                    pairValue = pair.Value.ToString();
+                                else
+                                    pairValue = pair.Value.AsJson();
+
+                                if (!string.IsNullOrWhiteSpace(pairValue))
+                                    info.Scopes[pair.Key] = pairValue;
                             }
                         }
 
-                        info.Scopes.Add(scope);
+                        info.Scopes["ApplicationName"] = Assembly.GetEntryAssembly().GetName().Name;
+                        info.Scopes["ApplicationVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
+                        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT ");
+                        info.Scopes["Environment"] = environment;
 
 
                     }, state);

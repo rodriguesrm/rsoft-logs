@@ -18,7 +18,8 @@ namespace PockWeb.For.Test
                 {
                     logging.ClearProviders();
                     logging.AddConsoleLogger();
-                    logging.AddElasticLogger();
+                    //logging.AddElasticLogger();
+                    logging.AddSeqLogger();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

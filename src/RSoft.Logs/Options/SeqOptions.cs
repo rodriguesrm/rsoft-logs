@@ -1,4 +1,6 @@
-﻿namespace RSoft.Logs.Options
+﻿using System.Collections.Generic;
+
+namespace RSoft.Logs.Options
 {
 
     /// <summary>
@@ -21,6 +23,11 @@
         /// API-Key credential access
         /// </summary>
         public string ApiKey { get; set; }
+
+        /// <summary>
+        /// Categories to ignore in the log
+        /// </summary>
+        public IEnumerable<string> IgnoreCategories { get; set; }
 
     }
 }

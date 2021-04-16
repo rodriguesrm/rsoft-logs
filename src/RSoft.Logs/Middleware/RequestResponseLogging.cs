@@ -161,7 +161,7 @@ namespace RSoft.Logs.Middleware
                     RemotePort = context.Connection.RemotePort
                 };
 
-                _logger.Log(LogLevel.Information, _eventId, requestInfo, null, (i, e) => { return $"{requestInfo.Id}(request): {requestInfo.Method} {requestInfo.RawUrl} => {body ?? "{}"}"; });
+                _logger.Log(LogLevel.Information, _eventId, requestInfo, null, (i, e) => { return $"REQUEST: {requestInfo.Method} {requestInfo.RawUrl}"; });
             }
         }
 
@@ -182,10 +182,10 @@ namespace RSoft.Logs.Middleware
                     Headers = context.Response.Headers.ToDictionary(k => k.Key, v => v.Value.ToString()),
                     StatusCode = context.Response.StatusCode,
                     Body = body,
-                    Exception = ex != null ? new LogExceptionInfo(ex) : null
+                    Exception = ex
                 };
 
-                _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, _eventId, respInfo, ex, (i, e) => { return $"{respInfo.Id}(response): {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode} => {body ?? "{}"}"; });
+                _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, _eventId, respInfo, ex, (i, e) => { return $"RESPONSE: {respInfo.StatusCode}-{(HttpStatusCode)respInfo.StatusCode}"; });
 
             }
         }

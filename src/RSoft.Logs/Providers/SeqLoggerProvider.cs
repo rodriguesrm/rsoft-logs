@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RSoft.Logs.Extensions;
 using RSoft.Logs.Model;
 using RSoft.Logs.Options;
 using System;
@@ -114,10 +115,8 @@ namespace RSoft.Logs.Providers
             // @t  > Timestamp
             dic.Add("@t", info.Timestamp.ToString("u"));
 
-            // @m  > Message
+            // @m  > Message (@mt not used)
             dic.Add("@m", info.Text);
-
-            // @mt > MessageTemplate	
 
             // @l  > Level
             dic.Add("@l", info.Level.ToString());
@@ -125,18 +124,46 @@ namespace RSoft.Logs.Providers
             // @x  > Exception
             if (info.Exception != null)
             {
-                dic.Add(nameof(info.Exception.HResult), info.Exception.HResult.ToString());
-                dic.Add(nameof(info.Exception.Source), info.Exception.Source);
-                dic.Add(nameof(info.Exception.Type), info.Exception.Type);
-                dic.Add("@x", info.Exception.StackTrace);
+                dic.Add("Exception_HResult", info.Exception.HResult.ToString());
+                dic.Add("Exception_Source", info.Exception.Source);
+                dic.Add("Exception_Type", info.Exception.GetType().FullName);
+                dic.Add("@x", info.Exception.StackTrace.AsJson());
             }
 
             // @i  > EventId
-            dic.Add("@i", $"{info.EventId.Id}-{info.EventId.Name}");
+            //dic.Add("@i", $"{info.EventId.Id}-{info.EventId.Name ?? "N/A"}");
+            dic.Add("@i", info.EventId.Id.ToString());
 
             // @r  > Renderings
 
-            return "{" + string.Join(",", dic.Select(x => $"\"{x.Key}\" : \"{x.Value}\"").ToArray()) + "}";
+            dic.Add("SystemUser", info.SystemUser);
+            
+            if (info.ApplicationUser != null)
+                dic.Add("ApplicationUser", $"{info.ApplicationUser.User}=>{info.ApplicationUser.Token}");
+            
+            dic.Add("HostName", info.HostName);
+            dic.Add("Category", info.Category);
+
+
+            if (info.Scopes?.Count > 0)
+            {
+                foreach (var scope in info.Scopes)
+                {
+                    dic.Add(scope.Key, scope.Value);
+                }
+            }
+
+            string messageResult = "{" + string.Join(",", dic.Select(pair =>
+            {
+                string result = null;
+                if (string.IsNullOrWhiteSpace(pair.Value) || pair.Value == "null")
+                    result = $"\"{pair.Key}\" : null";
+                else
+                    result = $"\"{pair.Key}\" : \"{pair.Value}\"";
+                return result;
+            }).ToArray()) + "}";
+
+            return messageResult;
         }
 
         ///<inheritdoc/>
@@ -145,21 +172,28 @@ namespace RSoft.Logs.Providers
             if (configIsOk)
             {
 
-                try
+                if (!Settings.Elastic.IgnoreCategories.Contains(info.Category))
                 {
-                    string message = JsonSerializer.Serialize(CreateMessageRequest(info), _serializerOptions);
-                    StringContent content = new StringContent(message, Encoding.UTF8, "application/json");
-                    HttpResponseMessage resp = _client.PostAsync($"{Settings.Seq.Uri}/api/events/raw?clef", content).GetAwaiter().GetResult();
-                    if (!resp.IsSuccessStatusCode)
+
+                    try
                     {
-                        string responseBody = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                        Terminal.Print(GetType().ToString(), LogLevel.Error, responseBody);
+                        //string message = JsonSerializer.Serialize(CreateMessageRequest(info), _serializerOptions);
+                        string message = CreateMessageRequest(info);
+                        StringContent content = new StringContent(message, Encoding.UTF8, "application/json");
+                        HttpResponseMessage resp = _client.PostAsync($"{Settings.Seq.Uri}/api/events/raw?clef", content).GetAwaiter().GetResult();
+                        if (!resp.IsSuccessStatusCode)
+                        {
+                            string responseBody = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                            Terminal.Print(GetType().ToString(), LogLevel.Error, responseBody);
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Terminal.Print(GetType().ToString(), LogLevel.Error, ex.Message, ex);
+                    }
+
                 }
-                catch (Exception ex)
-                {
-                    Terminal.Print(GetType().ToString(), LogLevel.Error, ex.Message, ex);
-                }
+
             }
         }
 

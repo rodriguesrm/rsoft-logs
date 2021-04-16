@@ -46,36 +46,22 @@ namespace RSoft.Logs.Model
         /// Log text message
         /// </summary>
         public string Text { get; set; }
-        
+
         /// <summary>
         /// Exception information data
         /// </summary>
-        public LogExceptionInfo Exception { get; set; }
-        
+        //public LogExceptionInfo Exception { get; set; }
+        public Exception Exception { get; set; }
+
         /// <summary>
         /// Log event id
         /// </summary>
         public EventId EventId { get; set; }
-        
-        /// <summary>
-        /// Log state object
-        /// </summary>
-        public object State { get; set; }
-        
-        /// <summary>
-        /// Log state text
-        /// </summary>
-        public string StateText { get; set; }
-        
-        /// <summary>
-        /// Log statate dictionary
-        /// </summary>
-        public IDictionary<string, object> StateProperties { get; set; }
 
         /// <summary>
-        /// Log scope information list
+        /// Log scope information dictionary
         /// </summary>
-        public IList<LogScopeInfo> Scopes { get; set; } = new List<LogScopeInfo>();
+        public IDictionary<string, string> Scopes { get; private set; } = new Dictionary<string, string>();
 
     }
 }

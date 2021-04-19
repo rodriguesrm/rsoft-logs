@@ -3,6 +3,7 @@ Logging mechanism for elastic (direct mode) and terminal console
 
 RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core ILogger interface. The available resources are:
 
+  - Seq logger provider  
   - Elastic logger provider
   - Console logger provider
   - Middlware API Request/Response logger

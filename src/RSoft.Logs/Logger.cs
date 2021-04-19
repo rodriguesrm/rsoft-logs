@@ -94,8 +94,7 @@ namespace RSoft.Logs
                     Category = _category,
                     Level = logLevel,
                     Text = exception?.Message ?? state.ToString(),
-                    //Exception = exception != null ? new LogExceptionInfo(exception) : null,
-                    Exception = exception,
+                    Exception = exception != null ? new LogExceptionInfo(exception) : null,
                     EventId = eventId,
                     ApplicationUser = GetSignedUserInformation()
                 };

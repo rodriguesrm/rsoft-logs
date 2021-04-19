@@ -126,12 +126,11 @@ namespace RSoft.Logs.Providers
             {
                 dic.Add("Exception_HResult", info.Exception.HResult.ToString());
                 dic.Add("Exception_Source", info.Exception.Source);
-                dic.Add("Exception_Type", info.Exception.GetType().FullName);
+                dic.Add("Exception_Type", info.Exception.Type);
                 dic.Add("@x", info.Exception.StackTrace.AsJson());
             }
 
             // @i  > EventId
-            //dic.Add("@i", $"{info.EventId.Id}-{info.EventId.Name ?? "N/A"}");
             dic.Add("@i", info.EventId.Id.ToString());
 
             // @r  > Renderings

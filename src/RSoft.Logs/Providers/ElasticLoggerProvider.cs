@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RSoft.Logs.Extensions;
 using RSoft.Logs.Model;
 using RSoft.Logs.Options;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -113,6 +115,7 @@ namespace RSoft.Logs.Providers
 
                     try
                     {
+
                         string message = JsonSerializer.Serialize(info, _serializerOptions);
                         StringContent content = new StringContent(message, Encoding.UTF8, "application/json");
                         HttpResponseMessage resp = _client.PostAsync($"{_indexName}/_doc", content).GetAwaiter().GetResult();

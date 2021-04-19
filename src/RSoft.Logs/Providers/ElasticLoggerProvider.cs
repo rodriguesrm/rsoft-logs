@@ -24,7 +24,7 @@ namespace RSoft.Logs.Providers
         #region Local objects/variables
 
         private readonly HttpClient _client;
-        private bool configIsOk;
+        private readonly bool _configIsOk;
         private string _indexName;
         private readonly JsonSerializerOptions _serializerOptions;
 
@@ -57,25 +57,25 @@ namespace RSoft.Logs.Providers
 
             Settings = settings;
 
-            configIsOk = settings.Elastic.Enable;
+            _configIsOk = settings.Elastic.Enable;
 
-            if (configIsOk)
+            if (_configIsOk)
             {
 
                 _client = factory.CreateClient();
 
                 if (string.IsNullOrWhiteSpace(settings.Elastic.Uri))
                 {
-                    configIsOk = false;
+                    _configIsOk = false;
                     Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'Uri' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
                 }
                 if (string.IsNullOrWhiteSpace(settings.Elastic.DefaultIndexName))
                 {
-                    configIsOk = false;
+                    _configIsOk = false;
                     Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Elastic 'DefaultIndexName' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
                 }
 
-                if (configIsOk)
+                if (_configIsOk)
                 {
                     _client.BaseAddress = new Uri(Settings.Elastic.Uri);
                     _indexName = Settings.Elastic.DefaultIndexName;
@@ -108,7 +108,7 @@ namespace RSoft.Logs.Providers
         ///<inheritdoc/>
         protected override void WriteLogAction(LogEntry info)
         {
-            if (configIsOk)
+            if (_configIsOk)
             {
                 if (!Settings.Elastic.IgnoreCategories.Contains(info.Category))
                 {

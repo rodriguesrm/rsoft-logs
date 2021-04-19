@@ -24,7 +24,7 @@ namespace RSoft.Logs.Providers
         #region Local objects/variables
 
         private readonly HttpClient _client;
-        private bool configIsOk;
+        private readonly bool _configIsOk;
         private readonly JsonSerializerOptions _serializerOptions;
 
         #endregion
@@ -56,16 +56,16 @@ namespace RSoft.Logs.Providers
 
             Settings = settings;
 
-            configIsOk = settings.Elastic.Enable;
+            _configIsOk = settings.Seq.Enable;
 
-            if (configIsOk)
+            if (_configIsOk)
             {
 
                 _client = factory.CreateClient();
 
                 if (string.IsNullOrWhiteSpace(settings.Seq.Uri))
                 {
-                    configIsOk = false;
+                    _configIsOk = false;
                     Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Seq 'Uri' configuration not found or invalid.\n{Terminal.Margin}Logger not work");
                 }
                 if (string.IsNullOrWhiteSpace(settings.Seq.ApiKey))
@@ -73,9 +73,9 @@ namespace RSoft.Logs.Providers
                     Terminal.Print(GetType().ToString(), LogLevel.Warning, $"Seq 'ApiKey' configuration not found or invalid.\n{Terminal.Margin}Logger maybe not work");
                 }
 
-                if (configIsOk)
+                if (_configIsOk)
                 {
-                    _client.BaseAddress = new Uri(Settings.Elastic.Uri);
+                    _client.BaseAddress = new Uri(Settings.Seq.Uri);
                     if (!string.IsNullOrWhiteSpace(Settings.Seq.ApiKey))
                         _client.DefaultRequestHeaders.Add("X-Seq-ApiKey", Settings.Seq.ApiKey);
                     _serializerOptions = new JsonSerializerOptions()
@@ -168,10 +168,10 @@ namespace RSoft.Logs.Providers
         ///<inheritdoc/>
         protected override void WriteLogAction(LogEntry info)
         {
-            if (configIsOk)
+            if (_configIsOk)
             {
 
-                if (!Settings.Elastic.IgnoreCategories.Contains(info.Category))
+                if (!Settings.Seq.IgnoreCategories.Contains(info.Category))
                 {
 
                     try

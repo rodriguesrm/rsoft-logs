@@ -44,6 +44,14 @@ The configuration of all the mechanisms of this package are done through the `ap
         "Microsoft.Hosting.Lifetime"
       ]
     },
+    "Seq": {
+      "Enable": true,
+      "Uri": "http://localhost:5341",
+      "ApiKey": "1234567890",
+      "IgnoreCategories": [
+        "Microsoft.Hosting.Lifetime"
+      ]
+    },
     "RequestResponseMiddleware": {
       "LogRequest": true,
       "LogResponse": true,
@@ -73,6 +81,14 @@ The configuration of all the mechanisms of this package are done through the `ap
 - `Uri` => Elastic Service url running
 - `DefaultIndxName` => Name of the document index to save the logs
 - `IgnoreCategories` => List of categories to ignore in the log record.
+
+##### `Seq` Section configuration
+
+- `Enable` => Indicates whether the log provider is enabled or disabled (Default=true)
+- `Uri` => Seq Service url running
+- `ApiKey` => ApiKey to authenticate in Seq service
+- `IgnoreCategories` => List of categories to ignore in the log record.
+
 
 ##### `RequestResponseMiddleware` Section configuration
 - `LogRequest` => Enables or disables request logging (disabled by default)

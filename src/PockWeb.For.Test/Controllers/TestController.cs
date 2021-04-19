@@ -19,7 +19,8 @@ namespace PockWeb.For.Test.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] PostModel model)
         {
-            _logger.LogInformation("Post");
+            string ticks = System.DateTime.Now.Ticks.ToString();
+            _logger.LogInformation("Post [{ticks}]", ticks);
             return Ok(new ResponseModel(true, $"POST OK - {model?.ToString()}"));
         }
 

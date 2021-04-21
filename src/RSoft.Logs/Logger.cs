@@ -117,7 +117,7 @@ namespace RSoft.Logs
                     {
                         foreach (var header in auditRequest.Headers)
                         {
-                            info.Scopes.Add($"Headers.{header.Key}", header.Value);
+                            info.Scopes.Add($"Headers.{header.Key}", header.Value.ToEscapedString());
                         }
                     }
 
@@ -150,7 +150,7 @@ namespace RSoft.Logs
                     {
                         foreach (var header in auditResponse.Headers)
                         {
-                            info.Scopes.Add($"Headers.{header.Key}", header.Value);
+                            info.Scopes.Add($"Headers.{header.Key}", header.Value.ToEscapedString());
                         }
                     }
 

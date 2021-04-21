@@ -148,6 +148,21 @@ namespace RSoft.Logs.Extensions
 
         }
 
+        /// <summary>
+        /// Convert string value to scaped quota string expression
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="value">Value to convert</param>
+        public static string ToEscapedString(this string value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            string result = value.Replace("\"", "\\\"");
+
+            return result;
+        }
+
     }
 
 }

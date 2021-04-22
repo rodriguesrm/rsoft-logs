@@ -199,13 +199,13 @@ namespace RSoft.Logs
                             }
                         }
 
-                        info.Scopes["ApplicationName"] = Assembly.GetEntryAssembly().GetName().Name;
-                        info.Scopes["ApplicationVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
-                        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT ");
-                        info.Scopes["Environment"] = environment;
-
 
                     }, state);
+
+                    info.Scopes["ApplicationName"] = Assembly.GetEntryAssembly().GetName().Name;
+                    info.Scopes["ApplicationVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
+                    string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT ");
+                    info.Scopes["Environment"] = environment;
 
                 }
 

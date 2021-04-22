@@ -45,6 +45,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.1.0-rc1.2
 * Fix request headers capture when their content contained quotation marks
 
+#### Version 1.1.0-rc1.3
+* Fix capture ApplicationName, ApplicationVersion and Environment
+
 ##### Documentation
 
 Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

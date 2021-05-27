@@ -116,7 +116,7 @@ namespace RSoft.Logs.Providers
             dic.Add("@t", info.Timestamp.ToString("u"));
 
             // @m  > Message (@mt not used)
-            dic.Add("@m", info.Text);
+            dic.Add("@m", info.Text.EscapeForJson());
 
             // @l  > Level
             dic.Add("@l", info.Level.ToString());
@@ -148,7 +148,7 @@ namespace RSoft.Logs.Providers
             {
                 foreach (var scope in info.Scopes)
                 {
-                    dic.Add(scope.Key, scope.Value);
+                    dic.Add(scope.Key, scope.Value.EscapeForJson());
                 }
             }
 

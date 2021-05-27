@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.0-rc1.3</Version>
+    <Version>1.1.0-rc1.4</Version>
     <PackageIcon>rsoft-logs-icon-32x32.png</PackageIcon>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
     <Authors>Rodrigo Rodrigues</Authors>

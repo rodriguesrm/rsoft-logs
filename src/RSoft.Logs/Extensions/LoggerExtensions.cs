@@ -149,9 +149,15 @@ namespace RSoft.Logs.Extensions
         }
 
         /// <summary>
+        /// Prepare string expressiont to escape characters to be added in json struct
+        /// </summary>
+        /// <param name="value">Expresstion to scape</param>
+        public static string EscapeForJson(this string value)
+            => value.Replace("\\", "/");
+
+        /// <summary>
         /// Convert string value to scaped quota string expression
         /// </summary>
-        /// <param name="value"></param>
         /// <param name="value">Value to convert</param>
         public static string ToEscapedString(this string value)
         {

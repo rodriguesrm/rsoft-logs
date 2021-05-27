@@ -48,6 +48,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.1.0-rc1.3
 * Fix capture ApplicationName, ApplicationVersion and Environment
 
+#### Version 1.1.0-rc1.4
+* Fix scape bar " \ " in seq log payload api
+
 ##### Documentation
 
 Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

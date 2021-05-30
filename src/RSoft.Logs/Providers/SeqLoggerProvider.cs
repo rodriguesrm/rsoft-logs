@@ -136,10 +136,10 @@ namespace RSoft.Logs.Providers
             // @r  > Renderings
 
             dic.Add("SystemUser", info.SystemUser);
-            
+
             if (info.ApplicationUser != null)
                 dic.Add("ApplicationUser", $"{info.ApplicationUser.User}=>{info.ApplicationUser.Token}");
-            
+
             dic.Add("HostName", info.HostName);
             dic.Add("Category", info.Category);
 
@@ -182,7 +182,7 @@ namespace RSoft.Logs.Providers
                         HttpResponseMessage resp = _client.PostAsync($"{Settings.Seq.Uri}/api/events/raw?clef", content).GetAwaiter().GetResult();
                         if (!resp.IsSuccessStatusCode)
                         {
-                            string responseBody = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                            string responseBody = $"{resp.Content.ReadAsStringAsync().GetAwaiter().GetResult()} | {message}";
                             Terminal.Print(GetType().ToString(), LogLevel.Error, responseBody);
                         }
                     }

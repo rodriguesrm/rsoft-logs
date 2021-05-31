@@ -153,21 +153,7 @@ namespace RSoft.Logs.Extensions
         /// </summary>
         /// <param name="value">Expresstion to scape</param>
         public static string EscapeForJson(this string value)
-            => value.Replace("\\", "/");
-
-        /// <summary>
-        /// Convert string value to scaped quota string expression
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        public static string ToEscapedString(this string value)
-        {
-            if (value == null)
-                return string.Empty;
-
-            string result = value.Replace("\"", "\\\"");
-
-            return result;
-        }
+            => System.Web.HttpUtility.JavaScriptStringEncode(value);
 
     }
 

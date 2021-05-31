@@ -110,16 +110,12 @@ namespace RSoft.Logs.Providers
         /// <param name="info">Log entry data object</param>
         private string CreateMessageRequest(LogEntry info)
         {
-            IDictionary<string, string> dic = new Dictionary<string, string>();
-
-            // @t  > Timestamp
-            dic.Add("@t", info.Timestamp.ToString("u"));
-
-            // @m  > Message (@mt not used)
-            dic.Add("@m", info.Text.EscapeForJson());
-
-            // @l  > Level
-            dic.Add("@l", info.Level.ToString());
+            IDictionary<string, string> dic = new Dictionary<string, string>
+            {
+                { "@t", info.Timestamp.ToString("u") },     // @t  > Timestamp
+                { "@m", info.Text },                        // @m  > Message (@mt not used)
+                { "@l", info.Level.ToString() }             // @l  > Level
+            };
 
             // @x  > Exception
             if (info.Exception != null)
@@ -127,7 +123,7 @@ namespace RSoft.Logs.Providers
                 dic.Add("Exception_HResult", info.Exception.HResult.ToString());
                 dic.Add("Exception_Source", info.Exception.Source);
                 dic.Add("Exception_Type", info.Exception.Type);
-                dic.Add("@x", info.Exception.StackTrace.AsJson());
+                dic.Add("@x", info.Exception.StackTrace.EscapeForJson());
             }
 
             // @i  > EventId
@@ -148,7 +144,7 @@ namespace RSoft.Logs.Providers
             {
                 foreach (var scope in info.Scopes)
                 {
-                    dic.Add(scope.Key, scope.Value.EscapeForJson());
+                    dic.Add(scope.Key, scope.Value);
                 }
             }
 
@@ -156,9 +152,9 @@ namespace RSoft.Logs.Providers
             {
                 string result = null;
                 if (string.IsNullOrWhiteSpace(pair.Value) || pair.Value == "null")
-                    result = $"\"{pair.Key}\" : null";
+                    result = $"\"{pair.Key.EscapeForJson()}\" : null";
                 else
-                    result = $"\"{pair.Key}\" : \"{pair.Value}\"";
+                    result = $"\"{pair.Key.EscapeForJson()}\" : \"{pair.Value}\"";
                 return result;
             }).ToArray()) + "}";
 
@@ -176,7 +172,6 @@ namespace RSoft.Logs.Providers
 
                     try
                     {
-                        //string message = JsonSerializer.Serialize(CreateMessageRequest(info), _serializerOptions);
                         string message = CreateMessageRequest(info);
                         StringContent content = new StringContent(message, Encoding.UTF8, "application/json");
                         HttpResponseMessage resp = _client.PostAsync($"{Settings.Seq.Uri}/api/events/raw?clef", content).GetAwaiter().GetResult();

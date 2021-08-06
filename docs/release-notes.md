@@ -57,6 +57,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.1.0-rc1.6
 * Manage string to scaped characters for Seq Logger
 
+#### Version 1.1.0-rc1.7
+* Manage MethodInfo state data
+
 ##### Documentation
 
 Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

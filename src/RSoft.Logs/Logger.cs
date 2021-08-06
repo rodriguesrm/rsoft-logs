@@ -166,9 +166,19 @@ namespace RSoft.Logs
                         if (item.Key != "{OriginalFormat}")
                         {
                             if (item.Value is string)
+                            {
                                 info.Scopes[item.Key] = item.Value.ToString();
+                            }
+                            else if (item.Value?.GetType()?.Name == "RuntimeMethodInfo")
+                            {
+                                info.Scopes["MethodInfo.Module"] = (item.Value as MethodInfo).Module.Name;
+                                info.Scopes["MethodInfo.DeclaringType"] = (item.Value as MethodInfo).DeclaringType.Name;
+                                info.Scopes["MethodInfo.Name"] = (item.Value as MethodInfo).Name;
+                            }
                             else
+                            {
                                 info.Scopes[item.Key] = item.Value.AsJson();
+                            }
                         }
                     }
                 }

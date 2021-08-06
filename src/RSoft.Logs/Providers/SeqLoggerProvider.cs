@@ -113,7 +113,7 @@ namespace RSoft.Logs.Providers
             IDictionary<string, string> dic = new Dictionary<string, string>
             {
                 { "@t", info.Timestamp.ToString("u") },     // @t  > Timestamp
-                { "@m", info.Text },                        // @m  > Message (@mt not used)
+                { "@m", info.Text.EscapeForJson() },        // @m  > Message (@mt not used)
                 { "@l", info.Level.ToString() }             // @l  > Level
             };
 
@@ -144,7 +144,7 @@ namespace RSoft.Logs.Providers
             {
                 foreach (var scope in info.Scopes)
                 {
-                    dic.Add(scope.Key, scope.Value);
+                    dic.Add(scope.Key, scope.Value.EscapeForJson());
                 }
             }
 
@@ -209,7 +209,6 @@ namespace RSoft.Logs.Providers
         }
 
         #endregion
-
 
     }
 

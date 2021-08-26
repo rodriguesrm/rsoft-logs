@@ -3,6 +3,7 @@ Logging mechanism for elastic (direct mode) and terminal console
 
 RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core ILogger interface. The available resources are:
 
+  - Seq logger provider  
   - Elastic logger provider
   - Console logger provider
   - Middlware API Request/Response logger
@@ -18,7 +19,7 @@ RSoft.Logs has the following dependencies.
 - Microsoft.Extensions.Logging.Abstractions (>= 5.0.0)
 - Microsoft.Extensions.Logging.Configuration (>= 5.0.0)
 - System.Configuration.ConfigurationManager (>= 5.0.0)
-- _System.Text.Json (>= 5.0.0)
+- System.Text.Json (>= 5.0.0)
 
 ### Installaction
 
@@ -94,7 +95,7 @@ The configuration of all the mechanisms of this package are done through the `ap
 - `LogRequest` => Enables or disables request logging (disabled by default)
 - `LogReponse` => Enables or disables response logging (disabled by default)
 - `SecurityActions` -> List of keys Method + Action that will have the request body hidden in the log recording. Use this section to indicate points where sensitive information, such as a password for example, is being trafficked.
-- `IgnoreActions`` -> Key list Method + Action that will be ignored by logging middleware. Use this section to indicate points that should not be logged due to the low relevance of the information, for example: healthcheckes, swagger, favicon, etc.
+- `IgnoreActions` -> Key list Method + Action that will be ignored by logging middleware. Use this section to indicate points that should not be logged due to the low relevance of the information, for example: healthcheckes, swagger, favicon, etc.
 
 ### Implementation in your application
 

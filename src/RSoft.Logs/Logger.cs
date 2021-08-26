@@ -117,7 +117,7 @@ namespace RSoft.Logs
                     {
                         foreach (var header in auditRequest.Headers)
                         {
-                            info.Scopes.Add($"Headers.{header.Key}", header.Value);
+                            info.Scopes.Add($"Headers.{header.Key}", header.Value.EscapeForJson()); //.ToEscapedString());
                         }
                     }
 
@@ -150,7 +150,7 @@ namespace RSoft.Logs
                     {
                         foreach (var header in auditResponse.Headers)
                         {
-                            info.Scopes.Add($"Headers.{header.Key}", header.Value);
+                            info.Scopes.Add($"Headers.{header.Key}", header.Value.EscapeForJson()); //.ToEscapedString());
                         }
                     }
 
@@ -166,9 +166,19 @@ namespace RSoft.Logs
                         if (item.Key != "{OriginalFormat}")
                         {
                             if (item.Value is string)
+                            {
                                 info.Scopes[item.Key] = item.Value.ToString();
+                            }
+                            else if (item.Value?.GetType()?.Name == "RuntimeMethodInfo")
+                            {
+                                info.Scopes["MethodInfo.Module"] = (item.Value as MethodInfo).Module.Name;
+                                info.Scopes["MethodInfo.DeclaringType"] = (item.Value as MethodInfo).DeclaringType.Name;
+                                info.Scopes["MethodInfo.Name"] = (item.Value as MethodInfo).Name;
+                            }
                             else
+                            {
                                 info.Scopes[item.Key] = item.Value.AsJson();
+                            }
                         }
                     }
                 }
@@ -199,13 +209,13 @@ namespace RSoft.Logs
                             }
                         }
 
-                        info.Scopes["ApplicationName"] = Assembly.GetEntryAssembly().GetName().Name;
-                        info.Scopes["ApplicationVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
-                        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT ");
-                        info.Scopes["Environment"] = environment;
-
 
                     }, state);
+
+                    info.Scopes["ApplicationName"] = Assembly.GetEntryAssembly().GetName().Name;
+                    info.Scopes["ApplicationVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
+                    string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT ");
+                    info.Scopes["Environment"] = environment;
 
                 }
 

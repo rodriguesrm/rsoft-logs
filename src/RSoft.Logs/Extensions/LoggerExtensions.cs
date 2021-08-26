@@ -148,6 +148,13 @@ namespace RSoft.Logs.Extensions
 
         }
 
+        /// <summary>
+        /// Prepare string expressiont to escape characters to be added in json struct
+        /// </summary>
+        /// <param name="value">Expresstion to scape</param>
+        public static string EscapeForJson(this string value)
+            => System.Web.HttpUtility.JavaScriptStringEncode(value);
+
     }
 
 }

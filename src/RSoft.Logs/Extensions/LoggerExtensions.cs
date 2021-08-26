@@ -8,6 +8,7 @@ using RSoft.Logs.Options;
 using RSoft.Logs.Providers;
 using System;
 using System.Net.Http;
+using System.Text.Json;
 
 namespace RSoft.Logs.Extensions
 {
@@ -96,6 +97,63 @@ namespace RSoft.Logs.Extensions
             return builder;
 
         }
+
+        /// <summary>
+        /// Add RSoft Seq Logger
+        /// </summary>
+        /// <param name="builder">Logging builder object</param>
+        public static ILoggingBuilder AddSeqLogger(this ILoggingBuilder builder)
+        {
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IHttpClientFactory, HttpClientFactory>());
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, SeqLoggerProvider>());
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<LoggerOptions>, LoggerOptionsSetup>());
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IOptionsChangeTokenSource<LoggerOptions>, LoggerProviderOptionsChangeTokenSource<LoggerOptions, SeqLoggerProvider>>());
+            builder.Services.AddHttpContextAccessor();
+            return builder;
+        }
+
+        /// <summary>
+        /// Add RSoft Seq Logger
+        /// </summary>
+        /// <param name="builder">Logging builder object</param>
+        /// <param name="configure">Action configure option</param>
+        public static ILoggingBuilder AddSeqLogger(this ILoggingBuilder builder, Action<LoggerOptions> configure)
+        {
+            if (configure == null)
+                throw new ArgumentNullException(nameof(configure));
+
+            builder.AddSeqLogger();
+            builder.Services.Configure(configure);
+
+            return builder;
+
+        }
+
+        /// <summary>
+        /// Converts the value of a type specified by a generic type parameter into a JSON string.
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="escapeQuoteMark">Escape mark quotation</param>
+        public static string AsJson(this object value, bool escapeQuoteMark = true)
+        {
+            if (value == null)
+                return string.Empty;
+
+            string result = JsonSerializer.Serialize(value);
+
+            if (escapeQuoteMark)
+                result = result.Replace("\"", "\\\"");
+
+            return result;
+
+        }
+
+        /// <summary>
+        /// Prepare string expressiont to escape characters to be added in json struct
+        /// </summary>
+        /// <param name="value">Expresstion to scape</param>
+        public static string EscapeForJson(this string value)
+            => System.Web.HttpUtility.JavaScriptStringEncode(value);
 
     }
 

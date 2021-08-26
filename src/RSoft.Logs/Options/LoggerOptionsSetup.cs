@@ -38,10 +38,8 @@ namespace RSoft.Logs.Options
         public override void Configure(LoggerOptions options)
         {
             base.Configure(options);
-            
-            options.Elastic = new ElasticOptions();
             _configuration.GetSection("Logging:Elastic").Bind(options.Elastic);
-
+            _configuration.GetSection("Logging:Seq").Bind(options.Seq);
         }
 
         #endregion

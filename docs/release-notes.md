@@ -3,6 +3,7 @@ Logging mechanism for elastic (direct mode) and terminal console
 
 RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core ILogger interface. The available resources are:
 
+  - Seq logger provider
   - Elastic logger provider
   - Console logger provider
   - Middlware API Request/Response logger
@@ -34,6 +35,33 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 
 #### Version 1.0.0
 * Upgrade packages dependencies to released versions 5.0.0
+
+#### Version 1.1.0-rc1.0
+* Added Seq logger provider
+
+#### Version 1.1.0-rc1.1
+* Update packates
+
+#### Version 1.1.0-rc1.2
+* Fix request headers capture when their content contained quotation marks
+
+#### Version 1.1.0-rc1.3
+* Fix capture ApplicationName, ApplicationVersion and Environment
+
+#### Version 1.1.0-rc1.4
+* Fix scape bar " \ " in seq log payload api
+
+#### Version 1.1.0-rc1.5
+* Show details in log message on seq error result
+
+#### Version 1.1.0-rc1.6
+* Manage string to scaped characters for Seq Logger
+
+#### Version 1.1.0-rc1.7
+* Manage MethodInfo state data
+
+#### Version 1.1.0
+* Launch/Release final 1.1.0 version
 
 ##### Documentation
 

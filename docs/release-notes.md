@@ -7,6 +7,7 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
   - Elastic logger provider
   - Console logger provider
   - Middlware API Request/Response logger
+  - gRPC Request/Response interceptor
 
 ### Release Notes
 
@@ -65,6 +66,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 
 #### Version 1.2.0
 * Created gRPC log request/response interceptor
+
+#### Version 1.2.1
+* Fix interceptor when cat RPC Exception, throw the same exception
 
 ##### Documentation
 

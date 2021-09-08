@@ -103,10 +103,10 @@ namespace RSoft.Logs.Interceptors
 
                 _logger.Log(ex == null ? LogLevel.Information : LogLevel.Error, _eventId, respInfo, ex, (i, e) =>
                     {
-                        if (ex == null)
-                            return $"RESPONSE: {respInfo.StatusCode}:{(StatusCode)respInfo.StatusCode}";
-                        else
-                            return $"RESPONSE: {respInfo.StatusCode}:{(StatusCode)respInfo.StatusCode} - {ex.Message}";
+                        string errMessage = string.Empty;
+                        if (ex != null)
+                            errMessage = $" - {ex.Message}";
+                        return $"RESPONSE: {respInfo.StatusCode:00}:{(StatusCode)respInfo.StatusCode}{errMessage}";
                     });
 
             }
@@ -129,7 +129,6 @@ namespace RSoft.Logs.Interceptors
             if (logAction)
                 LogRequest(context, body);
 
-
             string responseText = null;
             try
             {
@@ -140,6 +139,7 @@ namespace RSoft.Logs.Interceptors
                     LogResponse(context, responseText, null);
                 return response;
             }
+            catch (RpcException) { throw; }
             catch (Exception ex)
             {
                 LogResponse(context, responseText, ex.GetBaseException());

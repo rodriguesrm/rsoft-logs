@@ -139,7 +139,15 @@ namespace RSoft.Logs.Extensions
             if (value == null)
                 return string.Empty;
 
-            string result = JsonSerializer.Serialize(value);
+            string result = string.Empty;
+            try
+            {
+                result = JsonSerializer.Serialize(value);
+            }
+            catch
+            {
+                result = $"*** JSON SERIALIZE ERROR => TYPE: {value.GetType().FullName} ***";
+            }
 
             if (escapeQuoteMark)
                 result = result.Replace("\"", "\\\"");

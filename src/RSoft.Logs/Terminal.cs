@@ -132,6 +132,7 @@ namespace RSoft.Logs
         /// <param name="category">Category logger</param>
         /// <param name="level">Entry will be written on this level.</param>
         /// <param name="message">Entry message</param>
+        /// <param name="printDate">Print date flag indicator</param>
         /// <param name="logException">The exception related to this entry.</param>
         internal static void Print(string category, LogLevel level, string message, bool printDate, LogExceptionInfo logException)
             => Print(category, level, default, message, printDate, logException);

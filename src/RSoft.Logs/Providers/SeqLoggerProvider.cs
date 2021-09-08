@@ -134,7 +134,7 @@ namespace RSoft.Logs.Providers
             dic.Add("SystemUser", info.SystemUser);
 
             if (info.ApplicationUser != null)
-                dic.Add("ApplicationUser", $"{info.ApplicationUser.User}=>{info.ApplicationUser.Token}");
+                dic.Add("ApplicationUser", info.ApplicationUser.User);
 
             dic.Add("HostName", info.HostName);
             dic.Add("Category", info.Category);

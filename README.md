@@ -7,6 +7,7 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
   - Elastic logger provider
   - Console logger provider
   - Middlware API Request/Response logger
+  - gRPC Request/Response interceptor
 
 ### Dependencies
 
@@ -138,19 +139,29 @@ Import the namespaces:
 
 ```cs
 using RSoft.Logs.Extensions;
-using RSoft.Logs.Middleware;
+using RSoft.Logs.Middleware;        // For middleware in API Services only
+using RSoft.Logs.Interceptors;      // For interceptor in gRPC Services only
 ```
 
 In `ConfigureServices` method add the line:
 
 ```cs
-services.AddMiddlewareLoggingOption(Configuration);
+services.AddMiddlewareLoggingOption(Configuration); // For APIs and gRPC
 ```
 
 In `Configure` method add the line:
 
 ```cs
-app.UseMiddleware<RequestResponseLogging<Startup>>();
+app.UseMiddleware<RequestResponseLogging<Startup>>();   // For API only
+```
+
+To configure interceptor in gRPC Services host add the line
+```cs
+// For gRPC Service only
+services.AddGrpc(opt =>
+{
+    opt.Interceptors.Add<RequestResponseInterceptor<Startup>>();
+});
 ```
 
 That's all you need.

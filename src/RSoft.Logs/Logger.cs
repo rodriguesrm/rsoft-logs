@@ -55,7 +55,7 @@ namespace RSoft.Logs
                 string token = _accessor?.HttpContext?.Request?.Headers?.FirstOrDefault(f => f.Key == "Authorization").Value.FirstOrDefault(x => x.ToLower().StartsWith("bearer"));
 
                 if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(token))
-                    result =  new ApplicationUserInfo(user, token);
+                    result = new ApplicationUserInfo(user, token);
 
             }
             catch { /* Not to do. Fire and forget */ }
@@ -103,8 +103,10 @@ namespace RSoft.Logs
                 {
                     info.Scopes.Add("Text", state.ToString());
                 }
-                else if (state is AuditRequestInfo auditRequest)
+                else if (state is AuditRequestInfo || state is AuditGrpcRequestInfo)
                 {
+
+                    AuditRequestInfo auditRequest = state as AuditRequestInfo;
 
                     info.Text = formatter(state, exception);
                     if (auditRequest.Body != null && info.Text.Contains(auditRequest.Body))
@@ -112,7 +114,7 @@ namespace RSoft.Logs
 
                     info.Scopes.Add("Date", auditRequest.Date.ToString("u"));
                     info.Scopes.Add("Scheme", auditRequest.Scheme);
-                    
+
                     if (auditRequest.Headers?.Count > 0)
                     {
                         foreach (var header in auditRequest.Headers)
@@ -131,13 +133,20 @@ namespace RSoft.Logs
                     info.Scopes.Add("RemoteIpAddress", auditRequest.RemoteIpAddress);
                     info.Scopes.Add("RemotePort", auditRequest.RemotePort.ToString());
                     info.Scopes.Add("RawUrl", auditRequest.RawUrl);
-                    
+
                     if (!string.IsNullOrWhiteSpace(auditRequest.Body))
-                        info.Scopes.Add("Body", auditRequest.Body.AsJson());
+                    {
+                        if (state is AuditGrpcRequestInfo)
+                            info.Scopes.Add("Body", auditRequest.Body);
+                        else
+                            info.Scopes.Add("Body", auditRequest.Body.AsJson());
+                    }
 
                 }
-                else if (state is AuditResponseInfo auditResponse)
+                else if (state is AuditResponseInfo || state is AuditGrpcResponseInfo)
                 {
+
+                    AuditResponseInfo auditResponse = state as AuditResponseInfo;
 
                     info.Text = formatter(state, exception);
                     if (auditResponse.Body != null && info.Text.Contains(auditResponse.Body))
@@ -150,14 +159,19 @@ namespace RSoft.Logs
                     {
                         foreach (var header in auditResponse.Headers)
                         {
-                            info.Scopes.Add($"Headers.{header.Key}", header.Value.EscapeForJson()); //.ToEscapedString());
+                            info.Scopes.Add($"Headers.{header.Key}", header.Value.EscapeForJson());
                         }
                     }
 
                     if (!string.IsNullOrWhiteSpace(auditResponse.Body))
-                        info.Scopes.Add("Body", auditResponse.Body.AsJson());
+                    {
+                        if (state is AuditGrpcResponseInfo)
+                            info.Scopes.Add("Body", auditResponse.Body.ToString());
+                        else
+                            info.Scopes.Add("Body", auditResponse.Body.AsJson());
+                    }
 
-            }
+                }
                 else if (state is IEnumerable<KeyValuePair<string, object>> properties)
                 {
 

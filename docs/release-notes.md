@@ -40,7 +40,7 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 * Added Seq logger provider
 
 #### Version 1.1.0-rc1.1
-* Update packates
+* Update packages
 
 #### Version 1.1.0-rc1.2
 * Fix request headers capture when their content contained quotation marks
@@ -62,6 +62,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 
 #### Version 1.1.0
 * Launch/Release final 1.1.0 version
+
+#### Version 1.2.0
+* Created gRPC log request/response interceptor
 
 ##### Documentation
 

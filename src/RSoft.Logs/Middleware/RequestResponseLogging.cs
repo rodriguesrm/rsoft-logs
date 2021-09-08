@@ -51,52 +51,6 @@ namespace RSoft.Logs.Middleware
         #region Local methods
 
         /// <summary>
-        /// Apply security analysis to preserve sensitive information
-        /// </summary>
-        /// <param name="httpVerb">Http verb action (method)</param>
-        /// <param name="path">Route path</param>
-        /// <param name="body">Request body</param>
-        private string SecurityApplyBody(string httpVerb, string path, string body)
-        {
-
-            IEnumerable<string> secList = new List<string>();
-
-            if (_options?.SecurityActions != null)
-                secList = _options?
-                    .SecurityActions
-                    .Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
-                    .ToList();
-
-            string action = $"{httpVerb.ToUpper()}:{path.ToLower()}";
-            if (secList.Contains(action))
-                body = "*** OMITTED FOR SECURITY ***";
-
-            return body;
-        }
-
-        /// <summary>
-        /// Checks whether the action is in the list of actions to be ignored
-        /// </summary>
-        /// <param name="httpVerb">Http verb action (method)</param>
-        /// <param name="path">Route path</param>
-        private bool IsIgnoreAction(string httpVerb, string path)
-        {
-            IEnumerable<string> ignoredList = new List<string>();
-
-            if (_options?.IgnoreActions != null)
-                ignoredList = _options?
-                    .IgnoreActions
-                    .Select(s => $"{s.Method.ToUpper()}:{s.Path.ToLower()}")
-                    .ToList();
-
-            string action = $"{httpVerb.ToUpper()}:{path.ToLower()}";
-            if (ignoredList.Contains(action))
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
         /// Get request body information
         /// </summary>
         /// <param name="request">Request data object</param>
@@ -136,13 +90,13 @@ namespace RSoft.Logs.Middleware
         /// Log request data
         /// </summary>
         /// <param name="context">Http context object</param>
-        /// <param name="body"></param>
+        /// <param name="body">Request body expression</param>
         private void LogRequest(HttpContext context, string body)
         {
             if (_options.LogRequest)
             {
 
-                body = SecurityApplyBody(context.Request.Method, context.Request.Path, body);
+                body = Helpers.SecurityApplyBody(_options, context.Request.Method, context.Request.Path, body);
 
                 AuditRequestInfo requestInfo = new AuditRequestInfo()
                 {
@@ -203,7 +157,7 @@ namespace RSoft.Logs.Middleware
         public async Task Invoke(HttpContext ctx)
         {
 
-            bool logAction = !IsIgnoreAction(ctx.Request.Method, ctx.Request.Path);
+            bool logAction = !Helpers.IsIgnoreAction(_options, ctx.Request.Method, ctx.Request.Path);
 
             Stream streamBody = ctx.Response.Body;
             ctx.Request.EnableBuffering();

@@ -70,6 +70,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.2.1
 * Fix interceptor when cat RPC Exception, throw the same exception
 
+#### Version 1.2.2
+* Fix interceptor on get RPC Exception body and StatusCode
+
 ##### Documentation
 
 Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

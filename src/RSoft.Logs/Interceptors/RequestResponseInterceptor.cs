@@ -87,16 +87,24 @@ namespace RSoft.Logs.Interceptors
         /// <param name="context">Server call context</param>
         /// <param name="body">Resposne body expression</param>
         /// <param name="ex">Exception data object</param>
-        private void LogResponse(ServerCallContext context, string body, Exception ex)
+        private void LogResponse(ServerCallContext context, string body, Exception ex = null)
         {
             if (_options.LogResponse)
             {
+
+                int statusCode = ex == null ? (int)context.Status.StatusCode : (int)StatusCode.Internal;
+                if (ex != null && ex is RpcException)
+                {
+                    statusCode = (int)((RpcException)ex).StatusCode;
+                    ex = null;
+                }
+
 
                 AuditGrpcResponseInfo respInfo = new AuditGrpcResponseInfo()
                 {
                     Id = _traceId,
                     Headers = context.ResponseTrailers.ToDictionary(k => k.Key, v => v.Value.ToString()),
-                    StatusCode = ex == null ? (int)context.Status.StatusCode : (int)StatusCode.Internal,
+                    StatusCode = statusCode,
                     Body = body,
                     Exception = ex
                 };
@@ -136,10 +144,14 @@ namespace RSoft.Logs.Interceptors
                 if (response != null)
                     responseText = response.ToString();
                 if (logAction)
-                    LogResponse(context, responseText, null);
+                    LogResponse(context, responseText);
                 return response;
             }
-            catch (RpcException) { throw; }
+            catch (RpcException rpcEx) 
+            {
+                LogResponse(context, rpcEx.Status.Detail, rpcEx);
+                throw; 
+            }
             catch (Exception ex)
             {
                 LogResponse(context, responseText, ex.GetBaseException());

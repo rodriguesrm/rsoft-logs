@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 using RSoft.Logs.Model;
 using RSoft.Logs.Options;
 using System;
-using System.Threading.Tasks;
 
 namespace RSoft.Logs.Providers
 {
@@ -52,13 +51,12 @@ namespace RSoft.Logs.Providers
         #region Local methods
 
         ///<inheritdoc/>
-        protected override Task WriteLogAction(LogEntry info)
+        protected override void WriteLogAction(LogEntry info)
         {
             bool printDate = true;
             if (info.Category == "Microsoft.Hosting.Lifetime")
                 printDate = false;
             Terminal.Print(info.Category, info.Level, info.EventId, info.Text, printDate, info.Exception);
-            return Task.CompletedTask;
         }
 
         #endregion

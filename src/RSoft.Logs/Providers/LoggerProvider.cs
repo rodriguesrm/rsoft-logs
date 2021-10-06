@@ -45,39 +45,40 @@ namespace RSoft.Logs.Providers
         /// <summary>
         /// Write log event int destination
         /// </summary>
-        private Task WriteLogEvent()
+        private void WriteLogEvent()
         {
             if (_entryQueue.TryDequeue(out LogEntry info))
-                return WriteLogAction(info);
-            return Task.CompletedTask;
+                WriteLogAction(info);
         }
 
         /// <summary>
         /// Effective action to write log on destiny
         /// </summary>
         /// <param name="info"></param>
-        protected abstract Task WriteLogAction(LogEntry info);
+        protected abstract void WriteLogAction(LogEntry info);
 
         /// <summary>
         /// Star thread to process log
         /// </summary>
-        private Task ProcessLog()
+        private void ProcessLog()
         {
 
-            while (!_terminated)
-            {
-                try
+            Task.Run(() => {
+
+                while (!_terminated)
                 {
-                    WriteLogEvent();
-                }
-                catch (Exception ex)
-                {
-                    Terminal.Print(GetType().ToString(), LogLevel.Error, "Fail to logging", ex);
+                    try
+                    {
+                        WriteLogEvent();
+                    }
+                    catch (Exception ex)
+                    {
+                        Terminal.Print(GetType().ToString(), LogLevel.Error, "Fail to logging", ex);
+                    }
                 }
                 System.Threading.Thread.Sleep(10);
-            }
+            });
 
-            return Task.CompletedTask;
         }
 
         #endregion

@@ -74,10 +74,13 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 * Fix interceptor on get RPC Exception body and StatusCode
 
 #### Version 1.2.3
-* Fix bug top processor when application container run in docker
+* Fix bug top processor when application container run in docker (do not use this version)
 
 #### Version 1.2.4
-* Fiz loop log time
+* Fix loop log time (do not use this version)
+
+#### Version 1.2.5
+* Fix infinite loop (bug appear first time in 1.2.3 version)
 
 ##### Documentation
 

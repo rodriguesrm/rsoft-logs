@@ -80,7 +80,10 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 * Fix loop log time (do not use this version)
 
 #### Version 1.2.5
-* Fix infinite loop (bug appear first time in 1.2.3 version)
+* Fix infinite loop (bug appear first time in 1.2.3 version) (do not use this version)
+
+#### Version 1.3.0
+* Fixed high processing consumption bug and infinite loop (Refactory)
 
 ##### Documentation
 

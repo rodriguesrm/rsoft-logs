@@ -45,37 +45,39 @@ namespace RSoft.Logs.Providers
         /// <summary>
         /// Write log event int destination
         /// </summary>
-        private void WriteLogEvent()
+        private Task WriteLogEvent()
         {
             if (_entryQueue.TryDequeue(out LogEntry info))
-                WriteLogAction(info);
+                return WriteLogAction(info);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Effective action to write log on destiny
         /// </summary>
         /// <param name="info"></param>
-        protected abstract void WriteLogAction(LogEntry info);
+        protected abstract Task WriteLogAction(LogEntry info);
 
         /// <summary>
         /// Star thread to process log
         /// </summary>
-        private void ProcessLog()
+        private Task ProcessLog()
         {
-            Task.Run(() => {
 
-                while (!_terminated)
+            while (!_terminated)
+            {
+                try
                 {
-                    try
-                    {
-                        WriteLogEvent();
-                    }
-                    catch (Exception ex)
-                    {
-                        Terminal.Print(GetType().ToString(), LogLevel.Error, "Fail to logging", ex);
-                    }
+                    WriteLogEvent();
                 }
-            });
+                catch (Exception ex)
+                {
+                    Terminal.Print(GetType().ToString(), LogLevel.Error, "Fail to logging", ex);
+                }
+                System.Threading.Thread.Sleep(100);
+            }
+
+            return Task.CompletedTask;
         }
 
         #endregion
@@ -92,7 +94,8 @@ namespace RSoft.Logs.Providers
         ILogger ILoggerProvider.CreateLogger(string Category)
         {
             return _logger.GetOrAdd(Category,
-            (category) => {
+            (category) =>
+            {
                 return new Logger(this, category, _accessor);
             });
         }

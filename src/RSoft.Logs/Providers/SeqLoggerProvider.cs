@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace RSoft.Logs.Providers
 {
@@ -162,7 +163,7 @@ namespace RSoft.Logs.Providers
         }
 
         ///<inheritdoc/>
-        protected override void WriteLogAction(LogEntry info)
+        protected override Task WriteLogAction(LogEntry info)
         {
             if (_configIsOk)
             {
@@ -189,6 +190,7 @@ namespace RSoft.Logs.Providers
                 }
 
             }
+            return Task.CompletedTask;
         }
 
         #endregion

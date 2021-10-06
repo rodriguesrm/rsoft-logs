@@ -74,7 +74,7 @@ namespace RSoft.Logs.Providers
                 {
                     Terminal.Print(GetType().ToString(), LogLevel.Error, "Fail to logging", ex);
                 }
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(10);
             }
 
             return Task.CompletedTask;

@@ -76,6 +76,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.2.3
 * Fix bug top processor when application container run in docker
 
+#### Version 1.2.4
+* Fiz loop log time
+
 ##### Documentation
 
 Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

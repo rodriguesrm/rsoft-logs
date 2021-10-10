@@ -83,7 +83,7 @@ namespace RSoft.Logs
             EventId eventId,
             TState state,
             Exception exception,
-            Func<TState, Exception, string> formatter)
+            Func<TState, Exception, string> formatter = null)
         {
 
             if ((this as ILogger).IsEnabled(logLevel))
@@ -108,7 +108,7 @@ namespace RSoft.Logs
 
                     AuditRequestInfo auditRequest = state as AuditRequestInfo;
 
-                    info.Text = formatter(state, exception);
+                    info.Text = formatter?.Invoke(state, exception) ?? info.Text;
                     if (auditRequest.Body != null && info.Text.Contains(auditRequest.Body))
                         auditRequest.Body = null;
 
@@ -148,7 +148,7 @@ namespace RSoft.Logs
 
                     AuditResponseInfo auditResponse = state as AuditResponseInfo;
 
-                    info.Text = formatter(state, exception);
+                    info.Text = formatter?.Invoke(state, exception) ?? info.Text;
                     if (auditResponse.Body != null && info.Text.Contains(auditResponse.Body))
                         auditResponse.Body = null;
 
@@ -174,6 +174,8 @@ namespace RSoft.Logs
                 }
                 else if (state is IEnumerable<KeyValuePair<string, object>> properties)
                 {
+
+                    info.Text = formatter?.Invoke(state, exception) ?? info.Text;
 
                     foreach (KeyValuePair<string, object> item in properties)
                     {
@@ -228,7 +230,7 @@ namespace RSoft.Logs
 
                     info.Scopes["ApplicationName"] = Assembly.GetEntryAssembly().GetName().Name;
                     info.Scopes["ApplicationVersion"] = Assembly.GetEntryAssembly().GetName().Version.ToString();
-                    string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT ");
+                    string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
                     info.Scopes["Environment"] = environment;
 
                 }

@@ -85,6 +85,10 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 #### Version 1.3.0
 * Fixed high processing consumption bug and infinite loop (Refactory)
 
+#### Version 1.3.1
+* Fixed bug on get environment data
+* Added call formatter action in IEnumerable<KeyValuePairs> states
+
 ##### Documentation
 
 Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

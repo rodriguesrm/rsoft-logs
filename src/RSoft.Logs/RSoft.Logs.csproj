@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.3.1</Version>
+    <Version>1.3.2</Version>
     <PackageIcon>rsoft-logs-icon-32x32.png</PackageIcon>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
     <Authors>Rodrigo Rodrigues</Authors>
@@ -11,8 +11,8 @@
     <RepositoryUrl>https://github.com/rodriguesrm/rsoft-logs</RepositoryUrl>
     <Description>Logging mechanism for elastic (direct mode) and terminal console</Description>
     <PackageTags>logger ilogger elastic terminal console</PackageTags>
-    <AssemblyVersion>1.3.1.0</AssemblyVersion>
-    <FileVersion>1.3.1.0</FileVersion>
+    <AssemblyVersion>1.3.2.0</AssemblyVersion>
+    <FileVersion>1.3.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -89,6 +89,9 @@ RSoft.Logs is a provider of logging mechanisms based on the standard .Net Core I
 * Fixed bug on get environment data
 * Added call formatter action in IEnumerable<KeyValuePairs> states
 
+#### Version 1.3.2
+* Added check if body response is json before write log with convertion to json
+
 ##### Documentation
 
 Online documentation can be see [here](https://github.com/rodriguesrm/rsoft-logs/blob/master/README.md)

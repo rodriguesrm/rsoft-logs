@@ -8,6 +8,7 @@ using RSoft.Logs.Options;
 using RSoft.Logs.Providers;
 using System;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 
 namespace RSoft.Logs.Extensions
@@ -139,9 +140,10 @@ namespace RSoft.Logs.Extensions
             if (value == null)
                 return string.Empty;
 
-            string result = string.Empty;
+            string result;
             try
             {
+                if (IsJson(value)) return (string)value;
                 result = JsonSerializer.Serialize(value);
             }
             catch
@@ -154,6 +156,35 @@ namespace RSoft.Logs.Extensions
 
             return result;
 
+        }
+
+        /// <summary>
+        /// Check if object is a valid json string
+        /// </summary>
+        /// <param name="value">Object to check</param>
+        public static bool IsJson(object value)
+        {
+
+            if (!(value is string))
+                return false;
+
+            try
+            {
+                string strValue = (string)value;
+
+                if (string.IsNullOrWhiteSpace(strValue))
+                    return false;
+
+                byte[] stream = Encoding.UTF8.GetBytes(strValue);
+                _ = JsonDocument.Parse(stream);
+                
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>

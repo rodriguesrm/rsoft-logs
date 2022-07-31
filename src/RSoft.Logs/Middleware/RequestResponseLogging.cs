@@ -186,8 +186,7 @@ namespace RSoft.Logs.Middleware
                     }
                     else
                     {
-
-                        if (ctx.Response.ContentType.StartsWith("application/json"))
+                        if (ctx.Response.ContentType.StartsWith("application/json") || ctx.Response.ContentType.StartsWith("text/plain"))
                         {
                             responseText = await GetBodyResponse(ctx.Response);
                             if (!string.IsNullOrWhiteSpace(responseText))

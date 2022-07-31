@@ -38,6 +38,13 @@ namespace PockWeb.For.Test.Controllers
             return Ok(new ResponseModel(true, "GET OK"));
         }
 
+        [HttpGet("404")]
+        public IActionResult GetNotFound()
+        {
+            _logger.LogInformation("NotFound");
+            return NotFound("Item not found");
+        }
+
         [HttpGet("warning")]
         public IActionResult Warning()
         {
